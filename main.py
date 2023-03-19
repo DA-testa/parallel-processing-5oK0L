@@ -1,53 +1,50 @@
-# python3
-# Daniels Raivo Ivanovs 211RMB021 15.grupa
 
-def build_heap(data):
+
+def work1(data, a, i, swaps):
+    gar = 2 * i + 1
+    gar2 = 2 * i + 2
+
+    rez = i
+    if gar < a and data[gar] < data[rez]:
+        rez = gar
+        
+    if gar2 < a and data[gar2] < data[rez]:
+        rez = gar2
+        
+    if rez != i:
+        swaps.append((i,rez))
+        data[i], data[rez] = data[rez], data[i]
+        work1(data, a, rez, swaps)    
+
+
+def work2 (data):
     swaps = []
-    n = len(data)
-    
-    for i in range(n // 2 - 1, -1, -1):
-        j = i
-        while True:
-            k =2*j + 1
-            if k >= n:
-                break
-            if k +1 < n and data[k + 1] < data[k]:
-                k += 1
-            if data[j] > data[k]:
-                swaps.append((j, k))
-                data[j], data[k] = data[k], data[j]
-                j = k
-            else:
-                break  
-  
+    a = len(data)
+    for i in range(a// 2 -1, -1, -1):
+        work1(data, a, i, swaps)
     return swaps
 
-
 def main():
+    text = input()
     
-    read_input = input()
-    
-    if read_input.startswith('I'):
+    if 'I' in text:
         n = int(input())
         data = list(map(int, input().split()))
-        assert len(data) == n
-        swaps = build_heap(data)
-        print(len(swaps))
-        for i, j in swaps:
-            print(i, j)
+
+    if 'F' in text:
+        filee = input()
+        with open("tests/" + filee, 'r') as faili:
+            n = int(faili.readline())
+            data = list(map(int, faili.readline().split()))
             
-    elif read_input.startswith('F'):
-        file = input().strip()
-        with open(f'tests/{file}', 'r') as f:
-            n = int(f.readline().strip())
-            data = list(map(int, f.readline().split()))
-        assert len(data) == n
-        swaps = build_heap(data)
-        print(len(swaps))
-        
-    else:
-        print('Invalid character')
-     
+    assert len(data) == n
+
+    swaps = work2(data)
+
+    print(len(swaps))
+    for i, j in swaps:
+        print(i, j) 
+
 
 
 if _name_ == "_main_":
